@@ -61,6 +61,26 @@ Open the original working tree and ask Codex to resume.
 
 The [skill instructions](SKILL.md) define the approval and execution workflow. The [implementation plan template](assets/implementation-plan.md) defines the record. The helper provides `init <task-id>` and `check <task-id>` for plan creation and Git safety checks.
 
+## Backfill an existing implementation
+
+Use the same plan path when code already exists. The agent inspects the current code, relevant commits, and available test evidence. It records implemented behavior, verified results, and remaining work separately. A documentation-only backfill can proceed without a new implementation approval. Any proposed follow-up code change goes through the plan approval workflow.
+
+> Use $plan-keeper to backfill issue 421 from the existing SDK and business interaction code. Record what is verified and what still needs work.
+
+## Split one task into module records
+
+Keep one parent plan and link a separate document for each module.
+
+```text
+.ai/plans/
+├── issue-421.md
+└── issue-421/
+    ├── sdk.md
+    └── business-interaction.md
+```
+
+The parent owns shared scope, approvals, and acceptance criteria. Module records hold the latest local progress and verification, so you can open the SDK or business interaction record directly. Resume through the parent and follow its module links. Module records follow the same local Git protection as the parent. See the [module record template](assets/module-record.md).
+
 ## Local storage and Git
 
 - Plans stay in the working tree where they were created. A separate clone or worktree has its own plan files.

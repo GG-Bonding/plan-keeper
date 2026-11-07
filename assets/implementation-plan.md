@@ -16,11 +16,16 @@
 - Entry points and relevant code or tests:
 - Observed behavior:
 - Assumptions and open questions:
+- For backfilled plans, implemented behavior and evidence, verification gaps, and remaining work:
 
 ## Scope
 
 - In scope and likely affected paths:
 - Out of scope:
+
+## Modules (optional)
+
+- Link each module record and summarize its responsibility.
 
 ## Implementation steps
 

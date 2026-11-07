@@ -61,6 +61,26 @@ git clone https://github.com/GG-Bonding/plan-keeper.git ~/.agents/skills/plan-ke
 
 [技能说明](SKILL.md)定义审批和执行流程，[实施计划模板](assets/implementation-plan.md)定义记录结构。辅助脚本提供 `init <task-id>` 和 `check <task-id>`，用于创建计划和检查 Git 排除状态。
 
+## 为已实现的代码补录计划
+
+代码已经实现时，仍然使用同一条计划路径。Agent 根据现有代码、相关提交和能找到的测试证据，分别记录已实现的行为、已验证的结果和剩余工作。只补文档时可以直接记录，后续要改代码时，再审批拟变更的范围。
+
+> 用 $plan-keeper 根据现有 SDK 和业务交互代码补录 issue 421，写清已验证的内容和剩余工作。
+
+## 一个需求拆成多份模块文档
+
+保留一份总计划，并从中链接各模块的文档。
+
+```text
+.ai/plans/
+├── issue-421.md
+└── issue-421/
+    ├── sdk.md
+    └── business-interaction.md
+```
+
+总计划记录共同范围、审批和整体验收条件。模块文档各自记录最新进展和验证结果，想看 SDK 或业务交互的细节时可以直接打开对应文档。恢复任务时先读总计划，再按链接进入模块。模块文档与总计划遵循同样的 Git 本地排除规则。详见[模块记录模板](assets/module-record.md)。
+
 ## 本地存储与 Git
 
 - 计划留在创建它的工作区。不同的克隆或 Git worktree 各自保存计划。

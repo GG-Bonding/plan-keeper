@@ -82,6 +82,24 @@ class PlanKeeperTest(unittest.TestCase):
                 self.assertNotEqual(result.returncode, 0)
                 self.assertIn("tracks or stages", result.stderr)
 
+    def test_module_record_is_ignored_and_force_staging_blocks_recovery(self):
+        created = self.cli("init", "issue-421")
+        self.assertEqual(created.returncode, 0, created.stderr)
+
+        module = ".ai/plans/issue-421/sdk.md"
+        record = self.root / module
+        record.parent.mkdir()
+        record.write_text("Latest SDK progress", encoding="utf-8")
+
+        self.git("check-ignore", "-q", "--", module)
+        self.git("add", ".")
+        self.assertEqual(self.git("ls-files").stdout, "")
+
+        self.git("add", "-f", "--", module)
+        result = self.cli("check", "issue-421")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("tracks or stages", result.stderr)
+
     def test_case_variant_index_entry_blocks_creation(self):
         tracked = self.root / ".AI/Plans/older.md"
         tracked.parent.mkdir(parents=True)
