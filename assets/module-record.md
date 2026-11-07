@@ -9,6 +9,12 @@
 - In scope for this module:
 - Contracts and dependencies:
 
+## Technical design
+
+- Parent decision or contract:
+- Key flow, with a focused Mermaid diagram when useful:
+- Key code change, with file, symbol, and a short diff or language snippet:
+
 ## Latest progress
 
 - Implemented behavior and evidence:

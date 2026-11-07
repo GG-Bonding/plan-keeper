@@ -1,57 +1,80 @@
-# Implementation plan
+# 技术方案｜<需求名称>
 
 - Task ID: {{TASK_ID}}
 - Status: DRAFT
 - Revision: 1
-- Branch and starting HEAD:
-- Last updated:
+- 代码基线（分支和提交）　<填写>
+- 最近更新　<YYYY-MM-DD>
 
-## Objective and acceptance criteria
+## 1. 评审摘要
 
-- Objective:
-- Observable acceptance criteria:
+- **问题与影响**　<触发场景、受影响的用户或调用方>
+- **拟议改动**　<在哪一层调整什么行为>
+- **待确认事项**　<评审者需要决定什么，无则省略>
 
-## Current behavior and evidence
+## 2. 目标、范围与现状
 
-- Entry points and relevant code or tests:
-- Observed behavior:
-- Assumptions and open questions:
-- For backfilled plans, implemented behavior and evidence, verification gaps, and remaining work:
+| 项目 | 内容 |
+| --- | --- |
+| 目标 | <改动后可观察的结果> |
+| 涉及范围 | <入口、模块、接口或数据范围> |
+| 本次不涉及 | <明确排除的工作> |
+| 兼容性约束 | <需保留的接口、错误语义或调用行为> |
 
-## Scope
+**当前行为与依据**　<触发条件、调用链和问题位置，引用核对过的文件、函数、测试或提交。标出尚未核实的判断。>
 
-- In scope and likely affected paths:
-- Out of scope:
+## 3. 关键决策（按需）
 
-## Modules (optional)
+| 编号 | 决策与状态 | 备选方案 | 选择依据与代价 |
+| --- | --- | --- | --- |
+| D1 | <拟议决定与状态> | <实质性备选> | <依据、代价及适用条件> |
 
-- Link each module record and summarize its responsibility.
+## 4. 技术设计
 
-## Implementation steps
+### 4.1 关键链路（按需）
 
-- [ ] Describe the first implementation step and the expected result.
+<!-- 用一张 Mermaid 图解释一个评审问题。单模块分支用 flowchart，跨模块调用用 sequenceDiagram。标出受影响的失败路径和返回结果。 -->
 
-## Verification plan
+<用简短说明或 Mermaid 图描述目标行为，注明相关决策编号。>
 
-- Narrow check and expected outcome:
-- Additional checks or manual verification:
+### 4.2 关键代码差异（涉及代码变更时）
 
-## Risks and rollback
+- **位置**　<实际文件路径与函数或接口>
+- **关联决策**　<如 D1>
+- **评审重点**　<变化的行为及必须保留的行为>
 
-- Risks and affected behavior:
-- Rollback:
+<!-- 在此加入简短的 diff 或语言代码块。将拟议片段标为示意，将已实现的片段标明来源。 -->
 
-## Approval history
+### 4.3 模块分工与接口约定（按需）
 
-- Pending approval for revision 1.
+| 模块 | 职责与对外约定 | 模块文档 |
+| --- | --- | --- |
+| <模块> | <接口、错误语义与兼容约束> | <链接到模块记录> |
 
-## Execution record
+## 5. 验收与验证计划
 
-- Next action:
-- Progress, decisions, and blockers:
+| 关联决策 | 场景 | 可观察的预期结果 | 验证方式 |
+| --- | --- | --- | --- |
+| <如 D1> | <正常或异常场景> | <可断言的结果> | <具体测试或检查> |
 
-## Verification and delivery
+## 6. 风险、发布与回滚（按需）
 
-- Commands and observed results:
-- Skipped checks and verification gaps:
-- Changed files, commits, or PR:
+- **风险与影响面**　<受影响的调用方、系统或数据>
+- **发布与观察**　<上线顺序、观察指标和停止条件>
+- **回滚**　<触发条件、恢复步骤和回滚后验证>
+
+## 7. 实施与审批记录
+
+| 步骤 | 变更位置或模块 | 完成标准 | 状态 |
+| --- | --- | --- | --- |
+| 1 | <文件、函数或模块文档> | <可核对的结果> | 待实施 |
+
+| 版本 | 审批状态 | 审批依据或变更原因 |
+| --- | --- | --- |
+| v1 | 待审批 | <审批记录、会话或链接> |
+
+- **最新进展**　<已完成事项、阻塞和下一步>
+- **实际验证**　<执行命令、观察结果、未验证项及原因>
+- **交付记录**　<相关提交或 PR>
+
+<!-- 补录已有实现时注明代码基线，区分已实现、已验证和剩余工作，只记录有证据的审批和验证结果。 -->

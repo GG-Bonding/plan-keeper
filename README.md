@@ -4,7 +4,7 @@
 
 **One development task. One plan you can approve, update, and resume.**
 
-A local-first Agent Skill for keeping implementation plans, approvals, and verification results in a single Markdown file.
+A local-first Agent Skill for writing reviewable technical designs and keeping decisions, approvals, and verification in one Git-ignored Markdown plan.
 
 [Quickstart](#quickstart) · [Workflow](#workflow) · [Contributing](#contributing) · [简体中文](README.zh-CN.md)
 
@@ -18,6 +18,10 @@ When a coding task spans multiple sessions, the agent needs to know what you app
 - **Keep scope changes visible.** Material changes create a new revision in the same file and require fresh approval.
 - **Resume from the record.** The agent checks the saved plan against the branch, HEAD, and working tree before continuing.
 - **Keep plans out of normal staging.** A local Git exclusion protects the plan without editing the project's shared `.gitignore`.
+
+## Technical design format
+
+The [UTF-8 Markdown template](assets/implementation-plan.md) opens with a review summary and records scope, evidence, and design trade-offs. Use focused Mermaid flowcharts or sequence diagrams for key behavior, then tie short code diffs to acceptance checks. Larger tasks can link to [module design records](assets/module-record.md).
 
 ## Quickstart
 
