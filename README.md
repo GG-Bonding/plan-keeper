@@ -1,42 +1,81 @@
+<div align="center">
+
 # Plan Keeper
 
-Plan Keeper is an Agent Skill for keeping the implementation plan, approval history, and progress for a development task in one local Markdown file.
+**One development task. One plan you can approve, update, and resume.**
 
-## Install
+A local-first Agent Skill for keeping implementation plans, approvals, and verification results in a single Markdown file.
 
-For personal use across Codex projects, clone the repository into your user skills directory.
+[Quickstart](#quickstart) · [Workflow](#workflow) · [Contributing](#contributing) · [简体中文](README.zh-CN.md)
+
+</div>
+
+## Why Plan Keeper?
+
+When a coding task spans multiple sessions, the agent needs to know what you approved, what has already changed, and which checks actually ran. Plan Keeper gives that work a stable home at `.ai/plans/<task-id>.md` in your Git working tree.
+
+- **Review before coding.** Get a plan with acceptance criteria, scope, implementation steps, risks, and verification.
+- **Keep scope changes visible.** Material changes create a new revision in the same file and require fresh approval.
+- **Resume from the record.** The agent checks the saved plan against the branch, HEAD, and working tree before continuing.
+- **Keep plans out of normal staging.** A local Git exclusion protects the plan without editing the project's shared `.gitignore`.
+
+## Quickstart
+
+You need Git and Python 3.7 or later. The helper uses the Python standard library.
+
+### 1. Install the skill
+
+For personal use across Codex projects, clone it into your user skills directory.
 
 ```sh
 mkdir -p ~/.agents/skills
 git clone https://github.com/GG-Bonding/plan-keeper.git ~/.agents/skills/plan-keeper
 ```
 
-For project-scoped use, place the skill folder under `.agents/skills/` in the project. For another Agent Skills-compatible client, use that client's skill directory and invocation syntax. The helper requires Git and Python 3 and uses the Python standard library.
+For project-scoped use, place the skill folder under `.agents/skills/` in that project. For another Agent Skills-compatible client, use its skill directory and invocation syntax.
 
-## Use in Codex
+### 2. Plan a task and approve the revision
 
-Start with a task and, if available, a stable issue ID.
+Open a Git project in Codex and try this prompt.
 
 > Use $plan-keeper to plan the Redis timeout fix for issue 421. Use task ID `issue-421` and show me the plan for approval.
 
-The agent creates `.ai/plans/issue-421.md`, fills out the implementation plan, and asks you to approve its current revision. After approval, it updates that file as work progresses. Material changes go back through approval in the same file.
+Review `.ai/plans/issue-421.md`. When the current revision is ready, explicitly approve it.
 
-To resume in another session, open the original project working tree and say:
+> I approve revision 1 of `.ai/plans/issue-421.md`. Implement the approved scope and record the verification results.
+
+### 3. Resume in a later session
+
+Open the original working tree and ask Codex to resume.
 
 > Use $plan-keeper to resume `.ai/plans/issue-421.md`.
 
-The agent checks the plan against the branch, working tree, and approval record. A new clone or a separate worktree has its own plan files. Keep a private copy if you need recovery after losing the working tree.
+## Workflow
 
-## Git protection
+| Phase | What the plan records |
+| --- | --- |
+| `DRAFT` | Current behavior, acceptance criteria, scope, steps, and proposed checks. |
+| `APPROVED` → `IN_PROGRESS` | Approval tied to the current revision, completed steps, and decisions. |
+| `BLOCKED` or `REPLANNING` | What stopped progress or changed materially, and the next action. A revised scope needs fresh approval. |
+| `VERIFYING` → `COMPLETED` | Commands run, observed results, remaining gaps, and any delivery links. |
 
-On creation, the helper checks for tracked or staged plan paths. If needed, it adds `/.ai/plans/` to the repository's local Git exclusion file, resolved via Git so linked worktrees work. Shared ignore rules can override the local rule. The helper refuses to create or validate a plan if Git would consider it for normal staging.
+The [skill instructions](SKILL.md) define the approval and execution workflow. The [implementation plan template](assets/implementation-plan.md) defines the record. The helper provides `init <task-id>` and `check <task-id>` for plan creation and Git safety checks.
 
-The helper's `check` command validates the local path and Git status without writing. If the rule was lost, use `git rev-parse --git-path info/exclude` from the project root to locate the local exclusion file and restore `/.ai/plans/`, then rerun `check`. Approval, scope discipline, and progress updates are handled by the agent workflow. A force-add bypasses Git ignores, and ignore rules do not remove a path from history. Stage project files by path and review the index before committing or publishing.
+## Local storage and Git
 
-## Run the tests
+- Plans stay in the working tree where they were created. A separate clone or worktree has its own plan files.
+- When needed, the helper adds `/.ai/plans/` to the Git-resolved `info/exclude` file. It rejects tracked or staged plan paths and checks whether the target path is ignored.
+- Shared ignore rules can override the local rule, and a force-add can bypass it. If the local rule was removed, run `git rev-parse --git-path info/exclude` from the project root, restore the rule in that file, and rerun the helper's `check` command.
+- Approval and scope checks are agent workflow rules. The helper checks local storage and Git state.
+
+## Contributing
+
+Open an [issue](https://github.com/GG-Bonding/plan-keeper/issues/new) with the expected behavior, what happened, and a minimal way to reproduce it. Use sanitized examples in public issues and pull requests.
+
+Run the test suite from the repository root before submitting a change.
 
 ```sh
 python3 -B -m unittest discover -s tests -v
 ```
 
-The tests run the helper against temporary Git repositories and a linked worktree.
+The tests use temporary Git repositories and cover duplicate plans, session recovery, ignore overrides, staged files, and linked worktrees.
