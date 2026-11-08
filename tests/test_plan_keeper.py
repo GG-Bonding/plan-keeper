@@ -100,6 +100,25 @@ class PlanKeeperTest(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("tracks or stages", result.stderr)
 
+    def test_release_companions_are_optional_and_stay_out_of_staging(self):
+        created = self.cli("init", "issue-421")
+        self.assertEqual(created.returncode, 0, created.stderr)
+        plan = self.root / PLAN
+        self.assertEqual(list(plan.parent.iterdir()), [plan])
+
+        release = plan.with_suffix("")
+        config = release / "config" / "order-service.canary.yaml"
+        config.parent.mkdir(parents=True)
+        config.write_text("timeout_ms: 800", encoding="utf-8")
+        (release / "release-runbook.md").write_text("Release record", encoding="utf-8")
+        self.git("add", ".")
+        self.assertEqual(self.git("ls-files").stdout, "")
+
+        self.git("add", "-f", "--", str(config.relative_to(self.root)))
+        checked = self.cli("check", "issue-421")
+        self.assertNotEqual(checked.returncode, 0)
+        self.assertIn("tracks or stages", checked.stderr)
+
     def test_case_variant_index_entry_blocks_creation(self):
         tracked = self.root / ".AI/Plans/older.md"
         tracked.parent.mkdir(parents=True)

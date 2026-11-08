@@ -1,11 +1,11 @@
 ---
 name: plan-keeper
-description: Create, approve, maintain, and resume a single local implementation plan for a development task in a Git repository. Use for technical design documents, persistent plans, approval before coding, reconstructing a plan from implemented code, tracking a task across modules, or resuming an existing plan.
+description: Create, approve, maintain, and resume a single local implementation plan for a development task in a Git repository. Use for technical design documents, persistent plans, approval before coding, reconstructing a plan from implemented code, coordinating a task across repositories, preparing a release runbook, or resuming an existing plan.
 ---
 
 # Plan Keeper
 
-Use one canonical `.ai/plans/<task-id>.md` in the current Git working tree for the entire task. Resolve paths to scripts and assets relative to this skill's folder. Run the helper from within the target project.
+Use one canonical `.ai/plans/<task-id>.md` in the designated main Git working tree for the entire task. Resolve paths to scripts and assets relative to this skill's folder. Run the helper from within the target project.
 
 ## Find or create the plan
 
@@ -15,10 +15,10 @@ Use one canonical `.ai/plans/<task-id>.md` in the current Git working tree for t
 
 ## Write a reviewable technical design
 
-- Use UTF-8 Markdown and write the plan in the user's requested language. Start with a short review summary, then give the scope and current behavior with evidence. For material decisions, record the options, rationale, trade-offs, and status before the implementation details. If a decision changes, add its replacement and keep the original rationale.
+- Use UTF-8 Markdown and write the plan in the user's requested language. Start with the problem, intended behavior, and change boundary. Cite the current behavior. For material decisions, record the options, rationale, trade-offs, and status before the implementation details. If a decision changes, add its replacement and keep the original rationale.
 - Use a focused Mermaid flowchart for branching or state changes and a sequence diagram for cross-module calls. Draw only paths needed for the review, including relevant failure paths and outcomes. Omit a diagram when the behavior is clearer in prose.
 - Show the relevant code changes as short diffs or language snippets with real file and symbol references. Label proposed snippets as illustrative and distinguish them from observed code. When useful, use the same decision ID in the diagram caption, code discussion, and acceptance table.
-- Keep the main plan focused on cross-module contracts and acceptance. Put module-specific diagrams, code, and results in the linked records. Replace placeholders and omit optional sections that add no value. Preserve existing plans and their history when resuming them.
+- Keep the main plan focused on cross-module contracts and acceptance. Put module-specific diagrams, code, and results in the linked records. Preserve existing plans and their history when resuming them.
 
 ## Backfill a plan for implemented work
 
@@ -26,16 +26,28 @@ Use one canonical `.ai/plans/<task-id>.md` in the current Git working tree for t
 - Record a historical approval or test outcome only when you can cite its evidence. For record-only requests, update the plan without editing project code or requesting retroactive approval. Replace the template's pending approval placeholder with a record-only note if there is no proposed work. Use `COMPLETED` only when the acceptance criteria are supported by evidence and no planned work remains. Record gaps and next actions otherwise.
 - If the user wants follow-up implementation, separate the proposed work from the historical record and apply the approval gate to that proposal. For an existing plan, preserve its approval history and revise it when the proposed work materially changes.
 
-## Split details by module
+## Add project or module records only when needed
 
-- Keep `.ai/plans/<task-id>.md` as the recovery entry point and the authority for overall scope, approvals, cross-module contracts, and acceptance. In the parent plan's module section, link each document with a relative path and a short description of its responsibility.
-- Store one document per module at `.ai/plans/<task-id>/<module-slug>.md`, using lowercase letters, digits, and hyphens. Use the [module record template](assets/module-record.md). Keep the same path as the module evolves. Before reading or writing a module file, run the helper's `check <task-id>` for the parent plan, reject symlinks in the module directory or file, and verify the exact module path from the project root with `git check-ignore -q -- <module-path>`. Stop if either check fails.
+- Keep `.ai/plans/<task-id>.md` as the recovery entry point and the authority for overall scope, approvals, cross-module contracts, and acceptance. For multiple repositories, record each baseline, change boundary, and shared contract in the parent. Isolate work, tests, and commits by repository and preserve unrelated changes. Add a linked project or module record only when it needs separate review or progress tracking.
+- Store each needed project or module record at `.ai/plans/<task-id>/<module-slug>.md`, using lowercase letters, digits, and hyphens. Use the [module record template](assets/module-record.md). Keep its path stable. Reserve `release-runbook.md` for release preparation.
 - Update the module document for local progress and verification. Update the parent when a module's next action affects the task as a whole, or when cross-module contracts, overall acceptance, or approved scope change. Keep approval and revision history in the parent. A material scope, approach, or risk change still requires reapproval before implementation.
 - Resume from the parent and open the linked documents relevant to the next action. If the user gives a module path, resolve its parent plan first and confirm the link there.
 
+## Prepare release files after development and testing
+
+- Start with the parent plan alone. Record only release-related constraints that affect implementation, such as mixed-version compatibility, config defaults, or logging that must be added in code. After development and testing, create and link `.ai/plans/<task-id>/release-runbook.md` from the [runbook template](assets/release-runbook.md) if the task enters release preparation. Preserve an existing file if the path is already occupied and resolve the collision before writing.
+- Use actual deployable and package versions, order steps by dependency, and separate SDK publication from consumer deployment. Record gates, rollback actions, and recovery checks. Give the real log source and runnable queries for critical hops, with the expected evidence and next action on failure. Validate queries with sanitized success and controlled failure samples when available. Record unverified release prerequisites as blockers.
+- When configuration changes, create a commented `config/<project>.<environment>.yaml` beside the runbook for each affected target. Use the target system's keys and value types and include only changed settings. Follow the [YAML example](assets/release-config.example.yaml) for comments that explain defaults, units, activation or rollback. Store secret references only. Link the YAML from the step that applies it and record how to verify it took effect.
+- Before reading or writing any companion file, run the parent's `check <task-id>`, reject symlinks along its path, and run `git check-ignore -q -- <companion-path>` from the main project root. Stop on failure. Repeat the checks before Git publication.
+
+## Keep every generated file concise
+
+- Remove empty optional sections, scaffold instructions, unused examples, generic warnings, and repeated facts. Keep detail that changes a review decision, implementation, acceptance check, release action, or diagnosis. Link to the authoritative record for details maintained elsewhere.
+- If a missing fact blocks work, record the missing fact, who can verify it if known, and which step is blocked. Keep approvals, observed evidence, and unresolved blockers when trimming.
+
 ## Plan and get approval
 
-1. Inspect the relevant code and tests within the user's scope and repository rules. Fill in the objective, acceptance criteria, current behavior with evidence, proposed files or components, exclusions, implementation steps, verification, risks, and rollback. Record the current branch and HEAD, or that HEAD is unborn.
+1. Inspect the relevant code and tests within the user's scope and repository rules. Fill in the objective, acceptance criteria, current behavior with evidence, proposed files or components, exclusions, key changes, and verification. Include risks or rollback constraints only when they affect the design. Record the current branch and HEAD, or that HEAD is unborn.
 2. Present the plan path and request explicit approval for its current revision. Leave it in `DRAFT` or `REPLANNING` while waiting. Read-only investigation and plan updates can continue while approval is pending. Project implementation edits and implementation side effects require approval.
 3. Record the user's approval in the plan with the revision and a chat reference or dated summary, then set `APPROVED`. Approval must be traceable to the user. A plan status, a previous revision's approval, or a request to resume does not by itself authorize implementation. Existing repository or action-specific approval requirements still apply.
 4. Start only approved steps. If a material change is needed in scope, approach, or risk, log what changed, increment the revision, set `REPLANNING`, and request approval for the revised plan before continuing implementation. Keep prior approvals in the same file.
@@ -44,5 +56,5 @@ Use one canonical `.ai/plans/<task-id>.md` in the current Git working tree for t
 
 - Set `IN_PROGRESS` when starting. After each meaningful step, update its step status and record affected files, decisions, and observed results. For a blocker, set `BLOCKED` and record its cause, last completed step, and next action. Progress-only updates keep the same revision.
 - On return, read the entire plan and compare its branch, HEAD, and execution record with the actual working tree and diff. Preserve unrelated changes. Reconcile discrepancies before relying on completion marks or approvals. If evidence of approval is missing or the approved work materially changed, obtain approval before resuming. Plans stay in the working tree where they were created. Ask for the original plan or working tree if recovery points elsewhere.
-- Set `VERIFYING` when running checks. Record commands and observed outcomes, skipped checks with reasons, changed files, and commit or PR links if available. Set `COMPLETED` after the acceptance criteria are met and record any remaining verification gaps. Keep this plan for follow-ups on the same task.
-- Re-run the parent and module Git checks before staging, committing, or publishing. Stage project files by path and inspect the staged file list. Never force-add, commit, or publish plans or copy sensitive plan contents into public artifacts. If any plan path is tracked or staged, stop and report it before further Git publication. Exclusion rules cannot remove existing Git history.
+- Set `VERIFYING` when running checks. Record commands and observed outcomes, skipped checks with reasons, changed files, and commit or PR links if available. Set `COMPLETED` when the approved delivery scope is met. If that scope includes release or online acceptance, record the actual evidence before completing. Keep this plan for follow-ups on the same task.
+- Re-run the parent and companion Git checks before staging, committing, or publishing. Stage project files by path and inspect the staged file list. Never force-add, commit, or publish plans or copy sensitive plan contents into public artifacts. If any plan path is tracked or staged, stop and report it before further Git publication. Exclusion rules cannot remove existing Git history.

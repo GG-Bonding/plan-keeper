@@ -23,6 +23,8 @@
 
 [UTF-8 Markdown 模板](assets/implementation-plan.md)以评审摘要开篇，记录范围、现状依据和关键取舍。关键行为可用 Mermaid 流程图或时序图展示，再用短代码差异和验收表对应到同一项改动。多模块需求可链接[模块方案](assets/module-record.md)。
 
+开发前只建总 Plan。项目或模块需要单独评审时再建文档。开发和测试完成后，进入上线准备时才生成[发布与排查手册](assets/release-runbook.md)，有配置变更才附[带注释的 YAML](assets/release-config.example.yaml)。每份文件只保留当前阶段需要的决策、验证和操作。
+
 ## 快速开始
 
 需要 Git 和 Python 3.7 或更高版本。辅助脚本只使用 Python 标准库。

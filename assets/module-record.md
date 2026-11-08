@@ -1,27 +1,13 @@
-# Module record
+# 项目或模块记录｜<名称>
 
-- Module:
-- Parent plan (relative link):
-- Last updated:
+[总方案](../task-id.md) · <仓库 / 分支 @ 提交>
 
-## Responsibility and interfaces
+## 改动
 
-- In scope for this module:
-- Contracts and dependencies:
+- <本项目的变更位置、接口约束与需要单独评审的取舍>
 
-## Technical design
+<!-- 需要时在对应改动下附 Mermaid 图或短代码差异。 -->
 
-- Parent decision or contract:
-- Key flow, with a focused Mermaid diagram when useful:
-- Key code change, with file, symbol, and a short diff or language snippet:
+## 进展与验证
 
-## Latest progress
-
-- Implemented behavior and evidence:
-- Affected files or commits:
-- Blockers and next action:
-
-## Verification
-
-- Checks run and observed results:
-- Unverified behavior:
+- <实际变更、验证结果、阻塞或下一步。有 PR 后附链接。>

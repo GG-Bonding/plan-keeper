@@ -23,6 +23,8 @@ When a coding task spans multiple sessions, the agent needs to know what you app
 
 The [UTF-8 Markdown template](assets/implementation-plan.md) opens with a review summary and records scope, evidence, and design trade-offs. Use focused Mermaid flowcharts or sequence diagrams for key behavior, then tie short code diffs to acceptance checks. Larger tasks can link to [module design records](assets/module-record.md).
 
+Create the main plan first. Add project or module records only for details that need separate review. After development and testing, use the [release runbook](assets/release-runbook.md) when preparing a release, and add [commented YAML](assets/release-config.example.yaml) only for changed configuration. Keep each file focused on decisions, checks, and actions for its stage.
+
 ## Quickstart
 
 You need Git and Python 3.7 or later. The helper uses the Python standard library.
