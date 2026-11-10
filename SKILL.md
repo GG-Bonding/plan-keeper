@@ -15,10 +15,10 @@ Use one canonical `.ai/plans/<task-id>.md` in the designated main Git working tr
 
 ## Write a reviewable technical design
 
-- Use UTF-8 Markdown and write the plan in the user's requested language. Start with the problem, intended behavior, and change boundary. Cite the current behavior. For material decisions, record the options, rationale, trade-offs, and status before the implementation details. If a decision changes, add its replacement and keep the original rationale.
-- Use a focused Mermaid flowchart for branching or state changes and a sequence diagram for cross-module calls. Draw only paths needed for the review, including relevant failure paths and outcomes. Omit a diagram when the behavior is clearer in prose.
-- Show the relevant code changes as short diffs or language snippets with real file and symbol references. Label proposed snippets as illustrative and distinguish them from observed code. When useful, use the same decision ID in the diagram caption, code discussion, and acceptance table.
-- Keep the main plan focused on cross-module contracts and acceptance. Put module-specific diagrams, code, and results in the linked records. Preserve existing plans and their history when resuming them.
+- Use UTF-8 Markdown in the user's requested language. State the target behavior and any existing behavior to preserve. Cite the entry point, dependency, reference implementation, or test that explains the current behavior and blocker. Label assumptions and unverified compatibility claims.
+- Group changes by file, symbol, or module in implementation order. For each, state what changes and why where the choice matters. Put short diffs or code snippets under the change they explain. Use real paths and label proposed code as illustrative.
+- When the new path or interaction needs a visual, use a focused Mermaid flowchart for branches or a sequence diagram for calls. Show relevant failure and retained paths. Keep module-specific diagrams, code, and results in linked records when they need separate review.
+- List concrete checks with observable expectations. Record actual results separately. Include risks only when the trigger, impact, and handling can be stated. Keep prior decisions, approvals, and execution evidence when resuming an existing plan.
 
 ## Backfill a plan for implemented work
 
